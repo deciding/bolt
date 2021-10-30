@@ -536,4 +536,5 @@ def main():
 if __name__ == '__main__':
     np.set_printoptions(formatter={'float': lambda f: "{:.2f}".format(f)},
                         linewidth=100)
-    main()
+    #main()
+    main_cifar100()

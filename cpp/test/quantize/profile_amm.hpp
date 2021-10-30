@@ -267,25 +267,26 @@ void _profile_matmul(const char* dset_name, uint32_t N, uint32_t D, uint32_t M)
         "%s, %%-25s, N D M:,   %6d, %3d, %3d,  -1,\t", dset_name, N, D, M);
     auto fmt = fmt_as_cppstring.c_str();
 
-    // time it
-    {
-        // std::string msg = string_with_format(
-        //     "blas matmul               N, D, M:    %6d, %3d, %3d \t\t\t",
-        //     orig_N, orig_D, orig_M);
-        msg = string_with_format(fmt, "blas matmul");
-        REPEATED_PROFILE_DIST_COMPUTATION(kNreps, msg, kNtrials,
-            out.data(), out.size(),
-            _run_matmul(X, W, out));
-    }
-    {
-        // std::string msg = string_with_format(
-        //     "our  matmul               N, D, M:    %6d, %3d, %3d \t\t\t",
-        //     orig_N, orig_D, orig_M);
-        msg = string_with_format(fmt, "our matmul");
-        REPEATED_PROFILE_DIST_COMPUTATION(kNreps, msg, kNtrials,
-            out.data(), out.size(),
-            _run_our_matmul(X, W, out));
-    }
+    // TODO: Segmentation fault for all blas
+    //// time it
+    //{
+    //    // std::string msg = string_with_format(
+    //    //     "blas matmul               N, D, M:    %6d, %3d, %3d \t\t\t",
+    //    //     orig_N, orig_D, orig_M);
+    //    msg = string_with_format(fmt, "blas matmul");
+    //    REPEATED_PROFILE_DIST_COMPUTATION(kNreps, msg, kNtrials,
+    //        out.data(), out.size(),
+    //        _run_matmul(X, W, out));
+    //}
+    //{
+    //    // std::string msg = string_with_format(
+    //    //     "our  matmul               N, D, M:    %6d, %3d, %3d \t\t\t",
+    //    //     orig_N, orig_D, orig_M);
+    //    msg = string_with_format(fmt, "our matmul");
+    //    REPEATED_PROFILE_DIST_COMPUTATION(kNreps, msg, kNtrials,
+    //        out.data(), out.size(),
+    //        _run_our_matmul(X, W, out));
+    //}
 }
 
 template<class MatrixT>
@@ -331,19 +332,20 @@ void _profile_sketch_matmul_fixedW(const char* dset_name, uint32_t N,
         "%s, %%-25s, N D M d:, %6d, %3d, %3d, %3d,\t", dset_name, N, D, M, d);
     auto fmt = fmt_as_cppstring.c_str();
 
-    // time it
-    // msg = string_with_format("blas sketch fixedW matmul N, D, M, d: %6d, %3d, %3d, %3d \t",
-    //     N, D, M, d);
-    msg = string_with_format(fmt, "blas sketch fixedW matmul");
-    REPEATED_PROFILE_DIST_COMPUTATION(kNreps, msg, kNtrials,
-        out.data(), out.size(),
-        _run_matmul_fixedW(X, W0, sketch_out, W1, out));
-    // msg = string_with_format("our  sketch fixedW matmul N, D, M, d: %6d, %3d, %3d, %3d \t",
-    //     N, D, M, d);
-    msg = string_with_format(fmt, "our sketch fixedW matmul");
-    REPEATED_PROFILE_DIST_COMPUTATION(kNreps, msg, kNtrials,
-        out.data(), out.size(),
-        _run_our_matmul_fixedW(X, W0, sketch_out, W1, out));
+    // TODO: Segmentation fault
+    //// time it
+    //// msg = string_with_format("blas sketch fixedW matmul N, D, M, d: %6d, %3d, %3d, %3d \t",
+    ////     N, D, M, d);
+    //msg = string_with_format(fmt, "blas sketch fixedW matmul");
+    //REPEATED_PROFILE_DIST_COMPUTATION(kNreps, msg, kNtrials,
+    //    out.data(), out.size(),
+    //    _run_matmul_fixedW(X, W0, sketch_out, W1, out));
+    //// msg = string_with_format("our  sketch fixedW matmul N, D, M, d: %6d, %3d, %3d, %3d \t",
+    ////     N, D, M, d);
+    //msg = string_with_format(fmt, "our sketch fixedW matmul");
+    //REPEATED_PROFILE_DIST_COMPUTATION(kNreps, msg, kNtrials,
+    //    out.data(), out.size(),
+    //    _run_our_matmul_fixedW(X, W0, sketch_out, W1, out));
 }
 
 template<class MatrixT>
@@ -395,19 +397,20 @@ void _profile_sketch_matmul(const char* dset_name, uint32_t N, uint32_t D,
         "%s, %%-25s, N D M d:, %6d, %3d, %3d, %3d,\t", dset_name, N, D, M, d);
     auto fmt = fmt_as_cppstring.c_str();
 
-    // time it
-    // msg = string_with_format("blas sketch matmul        N, D, M, d: %6d, %3d, %3d, %3d \t",
-    //     N, D, M, d);
-    msg = string_with_format(fmt, "blas sketch matmul");
-    REPEATED_PROFILE_DIST_COMPUTATION(kNreps, msg, kNtrials,
-        out.data(), out.size(),
-        _run_sketch_matmul(X, W, S, sketch_X, sketch_W, out));
-    // msg = string_with_format("our  sketch matmul        N, D, M, d: %6d, %3d, %3d, %3d \t",
-    //     N, D, M, d);
-    msg = string_with_format(fmt, "our sketch matmul");
-    REPEATED_PROFILE_DIST_COMPUTATION(kNreps, msg, kNtrials,
-        out.data(), out.size(),
-        _run_our_sketch_matmul(X, W, S, St, sketch_X, sketch_W, out));
+    // TODO: Segmentation fault
+    //// time it
+    //// msg = string_with_format("blas sketch matmul        N, D, M, d: %6d, %3d, %3d, %3d \t",
+    ////     N, D, M, d);
+    //msg = string_with_format(fmt, "blas sketch matmul");
+    //REPEATED_PROFILE_DIST_COMPUTATION(kNreps, msg, kNtrials,
+    //    out.data(), out.size(),
+    //    _run_sketch_matmul(X, W, S, sketch_X, sketch_W, out));
+    //// msg = string_with_format("our  sketch matmul        N, D, M, d: %6d, %3d, %3d, %3d \t",
+    ////     N, D, M, d);
+    //msg = string_with_format(fmt, "our sketch matmul");
+    //REPEATED_PROFILE_DIST_COMPUTATION(kNreps, msg, kNtrials,
+    //    out.data(), out.size(),
+    //    _run_our_sketch_matmul(X, W, S, St, sketch_X, sketch_W, out));
 }
 
 void _profile_matmul_methods(std::vector<int> dvals, MatmulTaskShape shape) {

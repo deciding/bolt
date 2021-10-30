@@ -23,6 +23,7 @@
     #include "src/utils/eigen_utils.hpp"
     #include "src/utils/timing_utils.hpp"
     #include "src/utils/memory.hpp"
+    #include "src/utils/avx_utils.hpp"
     #include "test/testing_utils/testing_utils.hpp"
 #else
     #include "catch.hpp"

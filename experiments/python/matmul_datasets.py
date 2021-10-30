@@ -20,7 +20,8 @@ _memory = Memory('.', verbose=0)
 
 _dir = os.path.dirname(os.path.abspath(__file__))
 CIFAR10_DIR = os.path.join(_dir, '..', 'assets', 'cifar10-softmax')
-CIFAR100_DIR = os.path.join(_dir, '..', 'assets', 'cifar100-softmax')
+#CIFAR100_DIR = os.path.join(_dir, '..', 'assets', 'cifar100-softmax')
+CIFAR100_DIR = os.path.join(_dir, '..', '..', '..', 'cifar-vgg', 'myrepo', 'cifar100')
 
 
 # ================================================================ types

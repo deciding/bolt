@@ -3,6 +3,12 @@
 
 ## Python
 
+```
+python -m python.amm_main
+bash time_amm.sh 2>&1 | tee all_csv.log # other process inside the file amm_result2
+python -m python.amm_figs2
+```
+
 There's a Python implementation of the algorithm [here](https://github.com/dblalock/bolt/blob/45454e6cfbc9300a43da6770abf9715674b47a0f/experiments/python/vq_amm.py#L273), but no Python wrappers, sadly. Contributions welcome. Since SWIG is [constantly breaking](https://github.com/dblalock/bolt/issues/4), I'd suggest just creating PyTorch custom ops.
 
 Unless you need timing measurements, I would definitely recommend using this Python implementation for reproducing our accuracy numbers or building on / comparing to our work.

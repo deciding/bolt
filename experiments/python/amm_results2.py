@@ -14,6 +14,13 @@ _memory = Memory('.', verbose=1)
 
 pd.options.mode.chained_assignment = None  # suppress stupid warning
 
+# bash time_amm.sh 2>&1 | tee all_csv.log
+# awk -F',' '$1~/Cifar100/{print $0}' all_csv.log > cifar_csv.log
+# awk -F',' '$3~/denselut/||$3~/sparselut/||$3~/nolut/{print $0}'  cifar_csv.log > amm-mithral-timing.csv
+# awk -F',' '$3~/amm bolt/{print $0}'  cifar_csv.log > amm-bolt-timing.csv
+# awk -F',' '$2~/osnap/{print $0}'  cifar_csv.log > amm-osnap-timing.csv
+# awk -F',' '$2~/sparse sketch/{print $0}'  cifar_csv.log > amm-sparse-timing.csv
+
 
 RESULTS_DIR = os.path.join('results', 'amm')
 TIMING_RESULTS_DIR = os.path.join(RESULTS_DIR, 'timing')
@@ -595,17 +602,18 @@ def _clean_metrics_amm(df):
     # print(type(df['nlookups']))
     df['ops'].loc[mask] += df['nlookups'].loc[mask]
 
-    # df['nor']
-    # df_exact = df.loc[df['method'] == 'Brute Force']
-    df_exact = df.loc[df['method'] == 'Exact']
-    # print("df_exact\n", df_exact)
-    if 'task_id' in df.columns:
-        nuniq_tasks = len(df['task_id'].unique())
-    else:
-        nuniq_tasks = 1  # cifar{10,100}
-    assert df_exact.shape[0] == nuniq_tasks
-    base_time = float(df_exact.loc[0, 'time'])
-    df['NormalizedTime'] = df['time'] / base_time
+    #TODO: no brute force
+    #df_exact = df.loc[df['method'] == 'Exact']
+    ## print("df_exact\n", df_exact)
+    #if 'task_id' in df.columns:
+    #    nuniq_tasks = len(df['task_id'].unique())
+    #else:
+    #    nuniq_tasks = 1  # cifar{10,100}
+    #assert df_exact.shape[0] == nuniq_tasks
+    #base_time = float(df_exact.loc[0, 'time'])
+    #df['NormalizedTime'] = df['time'] / base_time
+    df['NormalizedTime'] = df['time']
+
     df['Speedup'] = 1. / df['NormalizedTime']
     df['1 - NMSE'] = 1. - df['normalized_mse']
     if 'Accuracy' in df.columns:
@@ -682,14 +690,17 @@ def _join_with_times(df, timing_dtype='f32', sparse_pareto=True):
     assert np.all(df_mithral['lutconst'] == df_mithral['lut_work_const'])
 
     df_osnap = _join_with_osnap_times(df)
-    df_brute = _join_with_brute_force_times(df)
-    df_sketch = _join_with_dense_sketch_times(df)
+    #TODO: segmentation fault
+    #df_brute = _join_with_brute_force_times(df)
+    #df_sketch = _join_with_dense_sketch_times(df)
     df_sparse = _join_with_sparse_sketch_times(df, sparse_pareto=sparse_pareto)
     # dfs = [df_mithral, df_bolt, df_osnap, df_brute, df_sketch, df_sparse]
-    dfs = [df_quant, df_mithral, df_bolt, df_osnap, df_brute,
-           df_sketch, df_sparse]
 
-    return pd.concat(dfs, axis=0, join='outer', sort=False)
+    dfs = [df_quant, df_mithral, df_bolt, df_osnap, df_sparse]
+    #dfs = [df_quant, df_mithral, df_bolt, df_osnap, df_brute,
+    #       df_sketch, df_sparse]
+
+    return pd.concat(dfs, axis=0, join='outer', sort=False, ignore_index=True)
 
 
 def _clean_amm_results_df(df, timing_dtype='f32', sparse_pareto=True):
@@ -783,8 +794,9 @@ def main():
     # print(df['Speedup'].unique().size)
 
     # df = cifar10_amm()
-    # df = cifar100_amm()
-    df = caltech_amm(filt='dog5x5')
+    df = cifar100_amm()
+    import pdb;pdb.set_trace()
+    #df = caltech_amm(filt='dog5x5')
     # df = caltech_amm(filt='sobel')
     print(sorted(df['method'].unique()))
     # # df = df.loc[df['method'].isin(['Brute Force', 'Mithral', 'SparsePCA'])]

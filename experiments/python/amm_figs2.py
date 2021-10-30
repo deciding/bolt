@@ -497,7 +497,8 @@ my_colors_list = my_colors_list[:5] + (new_yellow,) + my_colors_list[6:]
 #                         'FastJL', 'HashJL', 'OSNAP', 'PCA', 'SparsePCA',
 #                         'Rademacher', 'RandGauss', 'OrthoGauss')
 DEFAULT_PLOT_METHODS = (
-    'MADDNESS', 'MADDNESS-PQ', 'Exact', 'ScalarQuantize', 'Bolt',
+    #'MADDNESS', 'MADDNESS-PQ', 'Exact', 'ScalarQuantize', 'Bolt',
+    'MADDNESS', 'MADDNESS-PQ', 'MADDNESS Dense', 'MADDNESS, L = 2', 'MADDNESS, L = 4',
     # 'MADDNESS', 'Exact', 'ScalarQuantize', 'Bolt',
     # 'FastJL', 'HashJL', 'PCA', 'RandGauss', 'SparsePCA')
     'FastJL', 'HashJL', 'PCA', 'SparsePCA')
@@ -510,6 +511,7 @@ def lineplot(data, ax, x_metric, y_metric, units=None, scatter=False,
              # plot_methods=None):
              plot_methods=DEFAULT_PLOT_METHODS, first_two_same_marker=True,
              **kwargs):
+    import pdb;pdb.set_trace()
     estimator = 'mean' if units is None else None
     if plot_methods is not None:
         data = data.loc[data['method'].isin(set(plot_methods))]
@@ -562,6 +564,8 @@ def lineplot(data, ax, x_metric, y_metric, units=None, scatter=False,
         #     palette=my_colors_list, ax=ax)
         return
     kwargs.setdefault('ci', 'sd')
+    #TODO
+    use_markers = True
     sb.lineplot(data=data, x=x_metric, y=y_metric, hue='method',
                 # style='method', style_order=order[::-1], hue_order=order[::-1],
                 style='method', style_order=order, hue_order=order,
@@ -1019,24 +1023,69 @@ def ucr_fig2(x_metric='Speedup', y_metric='Relative Accuracy',
     save_fig('ucr2_{}_{}_{}'.format(x_metric, y_metric, problem))
 
 
+def cifar100_fig(save=False, x_metric='Speedup', y_metric='Accuracy'):
+    df100 = res.cifar100_amm()
+    sb.set_context('poster')
+    fig, axes = plt.subplots(1, 2, figsize=(11, 8.5), sharex=True)
+
+
+    lineplot(df100, axes[0], x_metric=x_metric, y_metric=y_metric)
+
+    # plt.suptitle('Sketch size vs Classification Accuracy')
+    xlbl = _xlabel_for_xmetric(x_metric)
+    # plt.suptitle('{} vs {}'.format(xlbl, y_metric))
+    plt.suptitle('Approximating Softmax Classifiers', family=USE_FONT)
+    axes[0].set_xlabel(xlbl, family=USE_FONT)
+    for ax in axes:
+        ax.set_ylabel(_ylabel_for_xmetric(y_metric), family=USE_FONT)
+    axes[0].set_title('CIFAR-100', family=USE_FONT)
+
+    handles, labels = axes[0].get_legend_handles_labels()
+    handles, labels = handles[1:], labels[1:]  # rm 'Method' title
+
+    # TODO
+    #for ax in axes.ravel():
+    #    ax.get_legend().remove()
+    if y_metric == 'Accuracy':
+        axes[0].set_ylim([.009, .73])
+    elif y_metric == '1 - NMSE':
+        axes[0].set_ylim([0, 1.02])
+
+    plt.figlegend(handles, labels, loc='lower center', ncol=3)
+
+    # if x_metric in ('muls', 'ops', 'nlookups', 'Latency', 'Throughput'):
+    axes[0].semilogx()
+
+    for ax in axes:
+        if x_metric == 'Speedup':
+            ax.set_xlim([.94, ax.get_xlim()[1]])
+        elif x_metric == 'NormalizedTime':
+            ax.set_xlim([ax.get_xlim()[0], 1.06])
+
+    plt.tight_layout()
+    plt.subplots_adjust(top=.89, bottom=.32)
+    save_fig('cifar_{}_{}'.format(x_metric, y_metric))
+
 def main():
-    scan_speed_fig()
-    encode_speed_fig()
-    lut_speed_fig()
-    fig1()
-    ucr_fig2()
-    caltech_fig()
-    # caltech_fig(y_metric='1 - NMSE')
-    # caltech_fig(x_metric='ops', y_metric='1 - NMSE')
-    cifar_fig()
-    # cifar_fig(y_metric='1 - NMSE')
-    # cifar_fig(x_metric='ops')
-    # cifar_fig(x_metric='ops', y_metric='1 - NMSE')
-    # ucr_fig2(x_metric='ops', y_metric='1 - NMSE')
-    # ucr_fig2(x_metric='ops')
-    # cifar_fig(y_metric='1 - NMSE')
-    # ucr_fig2()
-    # ucr_fig2(y_metric='1 - NMSE')
+    #scan_speed_fig()
+    #encode_speed_fig()
+    #lut_speed_fig()
+    #fig1()
+    #ucr_fig2()
+    #caltech_fig()
+    ## caltech_fig(y_metric='1 - NMSE')
+    ## caltech_fig(x_metric='ops', y_metric='1 - NMSE')
+    #cifar_fig()
+    ## cifar_fig(y_metric='1 - NMSE')
+    ## cifar_fig(x_metric='ops')
+    ## cifar_fig(x_metric='ops', y_metric='1 - NMSE')
+    ## ucr_fig2(x_metric='ops', y_metric='1 - NMSE')
+    ## ucr_fig2(x_metric='ops')
+    ## cifar_fig(y_metric='1 - NMSE')
+    ## ucr_fig2()
+    ## ucr_fig2(y_metric='1 - NMSE')
+
+    cifar100_fig()
 
 
 if __name__ == '__main__':

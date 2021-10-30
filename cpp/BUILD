@@ -1,7 +1,7 @@
 cc_binary(
     name = "main",
-    srcs = ['test/main.cpp'] + glob(['test/*/*.hpp']) + glob(['test/quantize/test*.cpp']), # + glob(["test/external/catch.hpp"]) +
-    deps = [':bolt', ':testing_utils', ':mithral'], 
+    srcs = ['test/main.cpp'] + glob(['test/*/*.hpp']) + glob(['test/quantize/test*.cpp']) + ['test/quantize/profile_amm.cpp'], # + glob(["test/external/catch.hpp"]) +
+    deps = [':bolt', ':testing_utils', ':mithral', ':avx_utils'], 
     copts = ['-O3', '-march=native', '-mavx', '-ffast-math', '-std=c++14'],
     defines = ['BLAZE', 'NDEBUG'],
 )
@@ -25,6 +25,14 @@ cc_library(
 cc_library(
     name = 'testing_utils',
     hdrs = ['test/testing_utils/testing_utils.hpp'],
+    copts = ['-O3', '-march=native', '-mavx', '-ffast-math', '-std=c++14'],
+    defines = ['BLAZE', 'NDEBUG'],
+)
+
+cc_library(
+    name = 'avx_utils',
+    srcs = ['src/utils/avx_utils.cpp'],
+    hdrs = glob(['src/utils/*.hpp']),
     copts = ['-O3', '-march=native', '-mavx', '-ffast-math', '-std=c++14'],
     defines = ['BLAZE', 'NDEBUG'],
 )
